@@ -1,0 +1,18 @@
+- 192 images × 10 = 1920 samples
+- But they are still the same 192 images
+- The model sees no new information
+
+
+1. Low‑frequency images have very weak visual features
+At 1–256 Hz, the fiber barely moves.
+The images look:
+- almost static
+- low contrast
+- low texture
+- very similar to each other
+To a CNN, these images are hard to distinguish.
+Meanwhile, high frequencies (4k, 8k, 16k, 22k) have:
+- strong oscillations
+- sharp patterns
+- clear texture differences
+So the model naturally learns high frequencies better.
