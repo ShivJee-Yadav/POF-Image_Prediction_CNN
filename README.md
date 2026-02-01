@@ -1,40 +1,39 @@
-# 🧠 POF Image Prediction CNN
+# 🧠 FiberFreqNet — Image‑Driven Frequency Estimation  
 
 <div align="center">
-
-[![GitHub stars](https://img.shields.io/github/stars/ShivJee-Yadav/POF-Image_Prediction_CNN?style=for-the-badge)](https://github.com/ShivJee-Yadav/POF-Image_Prediction_CNN/stargazers)
-
-[![GitHub forks](https://img.shields.io/github/forks/ShivJee-Yadav/POF-Image_Prediction_CNN?style=for-the-badge)](https://github.com/ShivJee-Yadav/POF-Image_Prediction_CNN/network)
-
-[![GitHub issues](https://img.shields.io/github/issues/ShivJee-Yadav/POF-Image_Prediction_CNN?style=for-the-badge)](https://github.com/ShivJee-Yadav/POF-Image_Prediction_CNN/issues)
-
-[![GitHub license](https://img.shields.io/github/license/ShivJee-Yadav/POF-Image_Prediction_CNN?style=for-the-badge)](LICENSE)
-
-**Leveraging Convolutional Neural Networks for robust image-based Probability of Failure (POF) prediction and analysis.**
+**Leveraging Convolutional Neural Networks for robust image‑based Probability of Failure prediction and analysis**
 
 </div>
 
 ## 📖 Overview
 
-This repository presents a machine learning project focused on predicting a "Probability of Failure" (POF) or a similar continuous metric directly from images using a Convolutional Neural Network (CNN). The project aims to automate and enhance visual inspection or predictive analysis tasks by training a deep learning model to extract relevant features from raw image data and map them to a regression target.
+This repository presents a deep learning project focused on estimating **vibration frequency (Hz)** directly from grayscale fiber images using a Convolutional Neural Network (CNN). The project automates the process of mapping raw image data to a continuous frequency target, enabling accurate prediction across a wide range (1 Hz – 22 kHz).
 
-It includes the CNN model architecture, scripts for training and evaluation, data processing utilities, and pre-trained model weights. The output also covers performance metrics and visualizations to assess the model's efficacy.
+It includes the CNN model architecture, scripts for training and testing, data preprocessing utilities, and pre-trained model weights. The outputs cover training logs, saved models, and evaluation results to assess the model’s performance.
+
+---
 
 ## ✨ Features
 
--   **Image-based Regression**: Develops and trains a CNN model to predict a continuous numerical value (likely representing POF) from input images.
--   **CNN Architecture**: Implements a Convolutional Neural Network designed for effective feature extraction from complex image data.
--   **Data Loading & Preprocessing**: Handles the loading of image datasets and their corresponding labels from CSV files, preparing them for model training.
--   **Model Training**: Provides the necessary scripts and configurations to train the CNN model using a specified dataset.
--   **Performance Evaluation**: Generates detailed performance metrics, including a full metrics CSV (`POF_full_metrics.csv`), to quantitatively evaluate model accuracy and generalization.
--   **Visual Analysis**: Includes functionality to generate plots (`plotname.pdf`) for visualizing model performance, data distributions, or training progress.
--   **Pre-trained Models**: Offers pre-trained `.pth` model weights (`frequency_regression_cnn.pth`, `frequency_regression_cnn_log.pth`) for immediate inference and testing without requiring extensive re-training.
+- **Image-based Frequency Regression**: Trains a CNN to predict vibration frequency values from fiber images.
+- **Modified ResNet-18 Architecture**: Adapts the first convolution layer for grayscale input and replaces the final layer with a regression head.
+- **Data Loading & Preprocessing**: Loads sweep and discrete datasets from CSV labels, applies resizing and normalization for model training.
+- **Frequency-Dependent Oversampling**: Balances sweep (1–1000 Hz, approximate labels) and discrete (1–22 kHz, accurate labels) data for stable learning.
+- **Model Training**: Provides scripts for training with early stopping, Adam optimizer, and MSE loss.
+- **Performance Evaluation**: Logs training loss per epoch and saves the best-performing model weights (`frequency_regression_cnn.pth`).
+- **Pre-trained Models**: Includes `.pth` weights for immediate inference and testing without re-training.
 
-## 🖥️ Visualizations
+---
 
-Performance metrics and analytical plots are generated during the model evaluation phase. An example plot, `plotname.pdf`, is included in the repository, showcasing some aspect of the model's performance or data distribution. Additional plots and results are likely stored in the `analysis_results/` directory.
+## 📂 Repository Structure
 
-![Example Plot](plotname.pdf) <!-- TODO: Consider converting this PDF to an image (e.g., PNG) for direct display in README.md or add more relevant screenshots showing the model's capabilities or training progress. -->
+- `train.py` – Training script with oversampling, early stopping, and model saving.
+- `test.py` – Inference script to predict frequency from new images.
+- `CNN/all_labels.csv` – Dataset labels (sweep + discrete).
+- `Final_Sweep_Reading/` – Image dataset directory.
+- `frequency_regression_cnn.pth` – Pre-trained model weights.
+
+---
 
 ## 🛠️ Tech Stack
 
