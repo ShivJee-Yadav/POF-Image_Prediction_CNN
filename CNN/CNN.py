@@ -1,5 +1,5 @@
 # Dataset is taken by camera having 7.5hz frame rate and 
-# each image is captured at 8hz so 
+# each image is captured at 8hz
 # using formula to approximiate image = F = 1  + [i*(830/1000)] 
 # total image in 1000s = 831 images 
 

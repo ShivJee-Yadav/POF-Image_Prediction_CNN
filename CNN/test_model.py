@@ -70,18 +70,22 @@ stri = ["256_hertz/temp-12012025172707-2.Bmp",
          "22000_hertz/temp-12012025174411-7.Bmp",
          "22000_hertz/temp-12012025174410-4.Bmp",
          "16384_hertz/temp-12012025174324-3.Bmp"]
-
+print("\n")
 for i in range(len(stri)):
 
     result = predict(stri[i])
 
     if(result < 250):
-        print("Low Frequency (range : 1hz - 250hz)")
+        print("Original Freq: ",stri[i].rsplit("/", 1)[0])
+        print("Predicted Range: Low Frequency (range : 1hz - 250hz)")
     elif (result >= 250 and result < 2000):
-        print("Middle Frequencies (range : 2kz to 20khz )")
+        print("Original Freq: ",stri[i].rsplit("/", 1)[0])
+        print("Predicted Range: Middle Frequencies (range : 2kz to 20khz )")
     elif (result >=2000 and result < 20000):
-        print("HighFrequency (range : above 20khz) ")
+        print("Original Freq: ",stri[i].rsplit("/", 1)[0])
+        print("Predicted Range: HighFrequency (range : above 20khz) ")
     else:
-        print("Ultrasound Frequency")
-
+        print("Original Freq: ",stri[i].rsplit("/", 1)[0])
+        print("Predicted Range: Ultrasound Frequency")
+    
     print("Predicted frequency:", result , "\n")
