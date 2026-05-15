@@ -1,3 +1,8 @@
 *.Bmp
 *.m
 *.png
+*resources/
+*.pdf
+*.xml
+dataset.zip
+Summary of Research Paper Concep.txt

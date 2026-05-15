@@ -7,6 +7,13 @@ import pandas as pd
 import os
 import math
 
+transform = transforms.Compose([
+    transforms.Resize((128,128)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.5], std=[0.5])
+])
+
+
 # -----------------------------
 # Frequency-dependent oversampling
 # -----------------------------
@@ -68,11 +75,7 @@ class FrequencyDataset(Dataset):
 # -----------------------------
 # Transform
 # -----------------------------
-transform = transforms.Compose([
-    transforms.Resize((128,128)),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.5], std=[0.5])
-])
+
 
 
 # -----------------------------
@@ -88,72 +91,73 @@ class RegressionHead(nn.Module):
         return self.act(self.fc(x))
 
 
-# -----------------------------
+if __name__ == "main":
+    # -----------------------------
 # Load Data
 # -----------------------------
-train_ds = FrequencyDataset(
-    "CNN/all_labels.csv",
-    "Final_Sweep_Reading",
-    transform=transform
-)
+    train_ds = FrequencyDataset(
+        "CNN/all_labels.csv",
+        "Final_Sweep_Reading",
+        transform=transform
+    )
 
-train_loader = DataLoader(train_ds, batch_size=16, shuffle=True)
-print("Dataset size:", len(train_ds))
+    train_loader = DataLoader(train_ds, batch_size=16, shuffle=True)
+    print("Dataset size:", len(train_ds))
 
 
-# -----------------------------
-# Model
-# -----------------------------
-model = models.resnet18(weights="IMAGENET1K_V1")
+    # -----------------------------
+    # Model
+    # -----------------------------
+    model = models.resnet18(weights="IMAGENET1K_V1")
 
-# grayscale conv1
-w = model.conv1.weight.sum(dim=1, keepdim=True)
-model.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3)
-model.conv1.weight = nn.Parameter(w)
+    # grayscale conv1
+    w = model.conv1.weight.sum(dim=1, keepdim=True)
+    model.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3)
+    model.conv1.weight = nn.Parameter(w)
 
-model.fc = RegressionHead()
-model = model.cuda()
+    model.fc = RegressionHead()
+    model = model.cuda()
 
-criterion = nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
+    criterion = nn.MSELoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
 
-# -----------------------------
-# Training Loop
-# -----------------------------
-best_loss = float("inf")
-patience = 10
-counter = 0
+    # -----------------------------
+    # Training Loop
+    # -----------------------------
+    best_loss = float("inf")
+    patience = 10
+    counter = 0
 
-for epoch in range(200):
-    model.train()
-    running = 0.0
+    for epoch in range(200):
+        model.train()
+        running = 0.0
 
-    for imgs, freqs in train_loader:
-        imgs = imgs.cuda()
-        freqs = freqs.cuda()
+        for imgs, freqs in train_loader:
+            imgs = imgs.cuda()
+            freqs = freqs.cuda()
 
-        preds = model(imgs)
-        loss = criterion(preds, freqs)
+            preds = model(imgs)
+            loss = criterion(preds, freqs)
 
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-        running += loss.item()
+            running += loss.item()
 
-    epoch_loss = running / len(train_loader)
-    print(f"Epoch {epoch+1}, Loss = {epoch_loss:.6f}")
+        epoch_loss = running / len(train_loader)
+        print(f"Epoch {epoch+1}, Loss = {epoch_loss:.6f}")
 
-    # Early stopping
-    if epoch_loss < best_loss:
-        best_loss = epoch_loss
-        counter = 0
-        torch.save(model.state_dict(), "frequency_regression_cnn_log.pth")
-        print("  → Improved, model saved.")
-    else:
-        counter += 1
-        print(f"  → No improvement ({counter}/{patience})")
+        # Early stopping
+        if epoch_loss < best_loss:
+            best_loss = epoch_loss
+            counter = 0
+            torch.save(model.state_dict(), "frequency_regression_cnn_log.pth")
+            print("  → Improved, model saved.")
+        else:
+            counter += 1
+            print(f"  → No improvement ({counter}/{patience})")
 
-    if counter >= patience:
-        print("Early stopping triggered.")
-        break
+        if counter >= patience:
+            print("Early stopping triggered.")
+            break
